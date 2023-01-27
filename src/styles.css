@@ -1,0 +1,13 @@
+body {
+    background-image: url("./static/background.png");
+    background-size: cover;
+    height: 100vh;
+    margin: 0;
+}
+
+body img {
+}
+
+svg {
+    height: 30px;
+}
