@@ -1,8 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
 body {
     background-image: url("./static/background.png");
     background-size: cover;
     height: 100vh;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    font-family: "Montserrat", sans-serif;
 }
 
 body img {
@@ -10,4 +17,92 @@ body img {
 
 svg {
     height: 30px;
+    width: 30px;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+}
+
+.overview {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+
+.overview svg {
+    height: 50px;
+    width: 50px;
+}
+
+.title {
+    font-size: 2.25em;
+}
+
+.date {
+    font-size: 0.8em;
+}
+
+.temperature {
+    font-weight: 800;
+    font-size: 2.5em;
+}
+
+.search {
+    display: flex;
+    gap: 8px;
+}
+
+.searchButton {
+    background-image: url("./static/searchIcon.png");
+    height: 30px;
+    width: 30px;
+    background-size: cover;
+    cursor: pointer;
+}
+
+.searchbar {
+}
+
+.indicators {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+
+.weatherDetails {
+    display: flex;
+    gap: 15px;
+}
+
+.bottom {
+    padding: 20px;
+}
+
+.singleData {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+    justify-content: space-around;
+}
+
+.weekDay {
+    display: flex;
+    flex-direction: column;
+}
+
+.buttons {
+    display: flex;
+    gap: 20px;
+}
+
+button {
+    border-radius: 5px;
+    border: 0;
+    background-color: 0 0 0 rgba(0,0,0,0.125);
+    padding: 6px;
+    cursor: pointer;
 }

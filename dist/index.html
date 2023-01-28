@@ -13,9 +13,11 @@
             <div class="location"></div>
             <div class="date"></div>
             <div class="temperature"></div>
-            <div class="unitSwitch"></div>
+            <button class="unitSwitch">Display °F></button>
+            <div class="currentWeather"></div>
             <div class="search">
-                <input type="search" class="searchBar">
+                <input type="search" class="searchBar" placeholder="Search Location...">
+                <div class="searchButton"></div> 
             </div>
         </div>
         <div class="indicators">
@@ -51,16 +53,70 @@
         </div>
     </div>
     <div class="bottom">
-        <div class="dayHourSwitch"></div>
-        <div class="hourScroll" hidden></div>
+        <div class="dayHourSwitch">
+            <div class="buttons">
+                <button class="dailyButton">Daily</button>
+                <button class="hourlyButton">Hourly</button>
+            </div>
+            <div class="hourScroll" hidden></div>
+        </div>
         <div class="singleData">
-            <div class="monday"></div>
-            <div class="tuesday"></div>
-            <div class="wednesday"></div>
-            <div class="thursday"></div>
-            <div class="friday"></div>
-            <div class="saturday"></div>
-            <div class="sunday"></div>
+            <div class="weekDay" id="monday">
+                <div class="weekDayTitle">
+                    Monday
+                </div>
+                <div class="temperatureHigh"></div>
+                <div class="temperatureLow"></div>
+                <div class="weatherIcon"></div>
+            </div>
+            <div class="weekDay" id="tuesday">
+                <div class="weekDayTitle">
+                    Tuesday
+                </div>
+                <div class="temperatureHigh"></div>
+                <div class="temperatureLow"></div>
+                <div class="weatherIcon"></div>
+            </div>
+            <div class="weekDay" id="wednesday">
+                <div class="weekDayTitle">
+                    Wednesday
+                </div>
+                <div class="temperatureHigh"></div>
+                <div class="temperatureLow"></div>
+                <div class="weatherIcon"></div>
+            </div>
+            <div class="weekDay" id="thursday">
+                <div class="weekDayTitle">
+                    Thursday
+                </div>
+                <div class="temperatureHigh"></div>
+                <div class="temperatureLow"></div>
+                <div class="weatherIcon"></div>
+            </div>
+            <div class="weekDay" id="friday">
+                <div class="weekDayTitle">
+                    Friday
+                </div>
+                <div class="temperatureHigh"></div>
+                <div class="temperatureLow"></div>
+                <div class="weatherIcon"></div>
+            </div>
+            <div class="weekDay" id="saturday">
+                <div class="weekDayTitle">
+                    Saturday
+                </div>
+                <div class="temperatureHigh"></div>
+                <div class="temperatureLow"></div>
+                <div class="weatherIcon"></div>
+            </div>
+            <div class="weekDay" id="sunday">
+                <div class="weekDayTitle">
+                    Sunday
+                </div>
+                <div class="temperatureHigh"></div>
+                <div class="temperatureLow"></div>
+                <div class="weatherIcon"></div>
+            </div>
         </div>
     </div>
 
