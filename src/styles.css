@@ -162,7 +162,39 @@ input[type="search"] {
 .buttons {
     display: flex;
     gap: 20px;
+    align-items: center;
 }
+
+.buttons button {
+    height: 40px;
+}
+
+.buttons svg {
+    cursor: pointer;
+}
+
+.change-hours {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 20px;
+}
+
+.dot {
+    position: relative;
+    top: -1px;
+    height: 7px;
+    width: 7px;
+    background-color: rgba(0,0,0,0);
+    border: 1px solid #f5f5f5;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.dot-selected {
+    background-color: #f5f5f5;
+}
+
 
 /*button {
     border-radius: 5px;

@@ -82,6 +82,7 @@ function refresh(query, units) {
     forecast.then(function(data) {
         const chanceOfRain = document.querySelector("#chanceOfRain");
         const weekDays = document.querySelectorAll(".weekDay");
+        const changeHours = document.querySelector(".change-hours");
 
         const foreCastLabel = document.querySelector(".foreCastLabel");
 
@@ -130,8 +131,13 @@ function refresh(query, units) {
                     i++;
                 }
                 foreCastLabel.textContent = "5-Day Forecast";
+                changeHours.style.display = "none";
                 break;
             case "hour":
+
+                const currentDot = document.querySelector(".dot-selected");
+                let currentPage = currentDot.getAttribute("data-dot");
+                i = currentPage * 5 - 5;
                 for (let item of data.list) {
                     futureHours.push(item);
                 }
@@ -141,10 +147,10 @@ function refresh(query, units) {
                     weekDay.querySelector(".temperatureHigh").textContent =  Math.round(futureHours[i].main.temp_max * 10) / 10 + unit;
                     weekDay.querySelector(".temperatureLow").textContent =  Math.round(futureHours[i].main.temp_min * 10) / 10 + unit;
                     weekDay.querySelector(".weatherIcon").innerHTML = utils.getIcon(futureHours[i].weather[0].icon);
-        
                     i++;
                 }
                 foreCastLabel.textContent = "3-Hour-Interval Forecast";
+                changeHours.style.display = "flex";
                 break;
         }
         
@@ -157,6 +163,8 @@ const searchBar = document.querySelector(".searchBar");
 const unitSwitch = document.querySelector(".unitSwitch");
 const dayButton = document.querySelector(".dailyButton");
 const hourButton = document.querySelector(".hourlyButton");
+const hourRight = document.querySelector(".change-hours__right");
+const hourLeft = document.querySelector(".change-hours__left");
 
 searchButton.addEventListener(("click"), () => {
     refresh(searchBar.value, currentUnit);
@@ -194,5 +202,35 @@ dayButton.addEventListener(("click"), (e) => {
 hourButton.addEventListener(("click"), (e) => {
     const currentLocation = document.querySelector(".location").textContent;
     dayHourSwitch = "hour";
+    refresh(currentLocation, currentUnit);
+});
+
+hourRight.addEventListener(("click"), (e) => {
+    const dots = document.querySelectorAll(".dot");
+    const currentDot = document.querySelector(".dot-selected");
+    let currentPage = currentDot.getAttribute("data-dot");
+    if (currentPage < 8) currentPage++;
+    dots.forEach((dot) => {
+        dot.classList.remove("dot-selected");
+        if (dot.getAttribute("data-dot") == currentPage) {
+            dot.classList.add("dot-selected");
+        }
+    });
+    const currentLocation = document.querySelector(".location").textContent;
+    refresh(currentLocation, currentUnit);
+});
+
+hourLeft.addEventListener(("click"), (e) => {
+    const dots = document.querySelectorAll(".dot");
+    const currentDot = document.querySelector(".dot-selected");
+    let currentPage = currentDot.getAttribute("data-dot");
+    if (currentPage > 1) currentPage--;
+    dots.forEach((dot) => {
+        dot.classList.remove("dot-selected");
+        if (dot.getAttribute("data-dot") == currentPage) {
+            dot.classList.add("dot-selected");
+        }
+    });
+    const currentLocation = document.querySelector(".location").textContent;
     refresh(currentLocation, currentUnit);
 });
