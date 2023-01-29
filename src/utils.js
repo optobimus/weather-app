@@ -133,9 +133,9 @@ function fetchFirstImageFromGoogle(location) {
   const SEARCH_ENGINE_ID = "a7fbf019348ba4e08";
 
   async function searchImages(location) {
-    let url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${location}&searchType=image`;
+    let url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${location}&searchType=image&imgSize=huge`;
     try {
-      let response = await fetch(url);
+      let response = await fetch(url, {mode: 'cors'});
       let data = await response.json();
       return data;
     } catch (error) {
@@ -145,7 +145,15 @@ function fetchFirstImageFromGoogle(location) {
 
   return searchImages(location).then(data => {
     if(data.items && data.items.length){
-      return data.items[0].link;
+      let filteredImages = data.items.filter(item => {
+        return !item.link.includes("https://lookaside.fbsbx.com");
+      });
+      if(filteredImages.length) {
+        const firstImageUrl = filteredImages[0].link;
+        return firstImageUrl;
+      } else {
+        console.log("No images found that do not contain m.facebook.com in the URL");
+      }
     }
   });
 }
