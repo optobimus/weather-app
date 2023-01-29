@@ -66,4 +66,65 @@ function getIcon(code) {
       return '';
 }
 
-export { getIcon };
+function getDateByTimezone(timezone) {
+    // Get current date and time
+    const date = new Date();
+
+    // Offset the date by the timezone
+    date.setTime(date.getTime() + (timezone * 1000));
+
+    // Get day of the week
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const day = days[date.getUTCDay()];
+
+    // Get month
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const month = months[date.getUTCMonth()];
+
+    // Get date
+    const dateNumber = date.getUTCDate();
+    let dateSuffix = "th";
+    if (dateNumber === 1 || dateNumber === 21 || dateNumber === 31) {
+        dateSuffix = "st";
+    } else if (dateNumber === 2 || dateNumber === 22) {
+        dateSuffix = "nd";
+    } else if (dateNumber === 3 || dateNumber === 23) {
+        dateSuffix = "rd";
+    }
+
+    // Get year
+    const year = date.getUTCFullYear().toString().slice(-2);
+
+    // Get hours and minutes
+    let hours = date.getUTCHours();
+    let minutes = date.getUTCMinutes();
+    let ampm = "am";
+    if (hours > 12) {
+        hours = hours - 12;
+        ampm = "pm";
+    }
+    if (minutes < 10) {
+        minutes = "0" + minutes;
+    }
+
+    // Return the date and time
+    return `${day}, ${dateNumber}${dateSuffix} ${month} '${year} 
+    ${hours}:${minutes} ${ampm}`;
+}
+
+function capitalize(str) {
+    let words = str.split(" ");
+    for (let i = 0; i < words.length; i++) {
+      words[i] = words[i][0].toUpperCase() + words[i].slice(1);
+    }
+    return words.join(" ");
+}
+
+function convertDateToWeekDay(dateString) {
+    let date = new Date(dateString);
+    let weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    let weekday = weekdays[date.getUTCDay()];
+    return weekday;
+}
+
+export { getIcon, getDateByTimezone, capitalize, convertDateToWeekDay };

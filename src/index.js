@@ -1,8 +1,12 @@
 import css from './styles.css';
 import * as utils from './utils';
 
-function fetchData(location) {
+function fetchWeather(location) {
     return fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&APPID=c623d6c1dc938ebc64fffc73f94df621&units=metric`, {mode: 'cors'}) 
+}
+
+function fetchForecast(location) {
+    return fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=c623d6c1dc938ebc64fffc73f94df621&units=metric`);
 }
 
 /*function processData(weatherData) {
@@ -20,83 +24,98 @@ async function processData(weatherData) {
     return jsonData;
 }
 
-const weatherData = fetchData("Sydney");
-const weather = processData(weatherData);
-weather.then(function(data) {
-    const title = document.querySelector(".title");
-    const location = document.querySelector(".location");
-    const date = document.querySelector(".date");
-    const temperature = document.querySelector(".temperature");
-    const currentWeather = document.querySelector(".currentWeather");
 
-    const feelsLike = document.querySelector("#feelsLike");
-    const humidity = document.querySelector("#humidity");
-    const chanceOfRain = document.querySelector("#chanceOfRain");
-    const windSpeed = document.querySelector("#windSpeed");
-    console.log(data);
+function refresh(query) {
+    const weatherData = fetchWeather(query);
+    const weather = processData(weatherData);
+    const forecastData = fetchForecast(query);
+    const forecast = processData(forecastData);
+
+    weather.then(function(data) {
+        const title = document.querySelector(".title");
+        const location = document.querySelector(".location");
+        const date = document.querySelector(".date");
+        const temperature = document.querySelector(".temperature");
+        const currentWeather = document.querySelector(".currentWeather");
     
-    title.innerHTML = capitalize(data.weather[0].description);
-    location.innerHTML = capitalize(data.name);
-    date.innerHTML = getDateByTimezone(data.timezone);
-    temperature.innerHTML = data.main.temp + " °C";
-    currentWeather.innerHTML = utils.getIcon(data.weather[0].icon);
+        const feelsLike = document.querySelector("#feelsLike");
+        const humidity = document.querySelector("#humidity");
+        const windSpeed = document.querySelector("#windSpeed");
+        console.log(data);
+        
+        title.innerHTML = utils.capitalize(data.weather[0].description);
+        location.innerHTML = utils.capitalize(data.name);
+        date.innerHTML = utils.getDateByTimezone(data.timezone);
+        temperature.innerHTML = Math.round(data.main.temp* 10) / 10 + " °C";
+        currentWeather.innerHTML = utils.getIcon(data.weather[0].icon);
+    
+        feelsLike.innerHTML = data.main.feels_like;
+        humidity.innerHTML = data.main.humidity + " %";
+        windSpeed.innerHTML = data.wind.speed + " km/h";
+    });
 
-    feelsLike.innerHTML = data.main.feels_like;
-    humidity.innerHTML = data.main.humidity + " %";
-    //chanceOfRain.innerHTML = data;
-    windSpeed.innerHTML = data.wind.speed + " km/h";
+    forecast.then(function(data) {
+        const chanceOfRain = document.querySelector("#chanceOfRain");
+        const weekDays = document.querySelectorAll(".weekDay");
+
+        let list = data.list;
+        chanceOfRain.innerHTML = data.list[0].pop * 100 + " %";
+        console.log(data);
+        let dateString = data.list[0].dt_txt.substring(0, data.list[0].dt_txt.indexOf(" "));
+        const futureDays = [];
+
+        //futureDays.push({date: dateString, maxTemp: data.list[0].main.temp_max, minTemp: data.list[0].main.temp_min});  
+        let currentDay = futureDays[0];   
+        let icon = null;   
+
+        for (let item of data.list) {
+            if (item.dt_txt.split(" ")[1] === "12:00:00") icon = item.weather[0].icon;
+            if (dateString !== item.dt_txt.substring(0, item.dt_txt.indexOf(" "))) {
+                dateString = item.dt_txt.substring(0, item.dt_txt.indexOf(" "));
+                currentDay = {date: dateString, maxTemp: item.main.temp_max, minTemp: item.main.temp_min, icon: icon};
+                futureDays.push(currentDay);
+            }
+        }
+        for (let day of futureDays) {
+            for (let item of data.list) {
+                if (item.dt_txt.substring(0, item.dt_txt.indexOf(" ")) === day.date) {
+                    console.log(day.date + ": " + day.maxTemp);
+                    console.log("DayItem: " + item.main.temp_max);
+                    if (item.main.temp_max > day.maxTemp) {
+                        day.maxTemp = item.main.temp_max;
+                    }
+                    if (item.main.temp_min < day.minTemp) {
+                        day.minTemp = item.main.temp_min;
+                    }
+                }
+                
+            }
+        }
+        console.log(futureDays);
+
+        let i = 0;
+        for (let weekDay of weekDays) {
+            weekDay.querySelector(".weekDayTitle").textContent = utils.convertDateToWeekDay(futureDays[i].date);
+            weekDay.querySelector(".temperatureHigh").textContent = futureDays[i].maxTemp + " °C";
+            weekDay.querySelector(".temperatureLow").textContent = futureDays[i].minTemp + " °C";
+            weekDay.querySelector(".weatherIcon").innerHTML = utils.getIcon(futureDays[i].icon);
+
+            i++;
+        }
+    });
+}
+
+refresh("New York");
+const searchButton = document.querySelector(".searchButton");
+const searchBar = document.querySelector(".searchBar");
+searchButton.addEventListener(("click"), () => {
+    refresh(searchBar.value);
+    searchBar.value = "";
 });
 
-function capitalize(str) {
-    let words = str.split(" ");
-    for (let i = 0; i < words.length; i++) {
-      words[i] = words[i][0].toUpperCase() + words[i].slice(1);
-    }
-    return words.join(" ");
-}
-
-function getDateByTimezone(timezone) {
-    // Get current date and time
-    const date = new Date();
-
-    // Offset the date by the timezone
-    date.setTime(date.getTime() + (timezone * 1000));
-
-    // Get day of the week
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const day = days[date.getUTCDay()];
-
-    // Get month
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const month = months[date.getUTCMonth()];
-
-    // Get date
-    const dateNumber = date.getUTCDate();
-    let dateSuffix = "th";
-    if (dateNumber === 1 || dateNumber === 21 || dateNumber === 31) {
-        dateSuffix = "st";
-    } else if (dateNumber === 2 || dateNumber === 22) {
-        dateSuffix = "nd";
-    } else if (dateNumber === 3 || dateNumber === 23) {
-        dateSuffix = "rd";
-    }
-
-    // Get year
-    const year = date.getUTCFullYear().toString().slice(-2);
-
-    // Get hours and minutes
-    let hours = date.getUTCHours();
-    let minutes = date.getUTCMinutes();
-    let ampm = "am";
-    if (hours > 12) {
-        hours = hours - 12;
-        ampm = "pm";
-    }
-    if (minutes < 10) {
-        minutes = "0" + minutes;
-    }
-
-    // Return the date and time
-    return `${day}, ${dateNumber}${dateSuffix} ${month} '${year} 
-    ${hours}:${minutes} ${ampm}`;
-}
+window.addEventListener(("keydown"), (event) => {
+    if (event.key === "Enter") {
+        refresh(searchBar.value);
+        searchBar.value = "";
+    } 
+});

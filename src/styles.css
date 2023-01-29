@@ -29,20 +29,29 @@ svg {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 20px;
+    padding: 30px;
 }
 
 .overview svg {
-    height: 50px;
-    width: 50px;
+    height: 70px;
+    width: 70px;
 }
 
 .title {
     font-size: 2.25em;
 }
 
+.location {
+    font-size: 1.5em;
+}
+
 .date {
     font-size: 0.8em;
+}
+
+.temperatureContainer {
+    display: flex;
+    gap: 20px;
 }
 
 .temperature {
@@ -64,13 +73,42 @@ svg {
 }
 
 .searchbar {
+
 }
+
+/* Search Input */
+
+input[type="search"] {
+    /* Box-sizing to include padding and border */
+    box-sizing: border-box;
+    /* Remove default styling */
+    border: none;
+    /* Add a slight transparency */
+    background: rgba(255, 255, 255, 0.5);
+    /* Add some padding */
+    padding: 10px;
+    /* Add a border radius for a rounded look */
+    border-radius: 20px;
+    /* Add a font size */
+    font-size: 16px;
+    /* Add a transition for hover effect */
+    transition: background 0.3s ease;
+  }
+  
+  /* Input Focus */
+  input[type="search"]:focus {
+    /* Add a darker background on focus */
+    background: rgba(255, 255, 255, 0.8);
+    /* Add a box-shadow */
+    box-shadow: 0 0 5px #fff;
+  }
+  
 
 .indicators {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 20px;
+    padding: 30px;
 }
 
 .weatherDetails {
@@ -92,6 +130,16 @@ svg {
 .weekDay {
     display: flex;
     flex-direction: column;
+    gap: 15px;
+}
+
+.weekDayTitle {
+    font-size: 1.25em;
+}
+
+.temperatureHigh {
+    font-size: 1.25em;
+    font-weight: 600;
 }
 
 .buttons {
@@ -99,10 +147,23 @@ svg {
     gap: 20px;
 }
 
-button {
+/*button {
     border-radius: 5px;
     border: 0;
     background-color: 0 0 0 rgba(0,0,0,0.125);
     padding: 6px;
     cursor: pointer;
+}*/
+
+button {
+    background-color: rgba(255, 255, 255, 0.1); /* This sets the background color to white with 10% opacity */
+    border: none; 
+    color: white; 
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block; 
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 8px;
 }
