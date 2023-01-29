@@ -127,4 +127,22 @@ function convertDateToWeekDay(dateString) {
     return weekday;
 }
 
-export { getIcon, getDateByTimezone, capitalize, convertDateToWeekDay };
+
+let currentUnit = "C";
+function toggleTemperatureUnit() {
+  let elements = document.querySelectorAll("body *");
+  for (let i = 0; i < elements.length; i++) {
+    let element = elements[i];
+    if (currentUnit === "C") {
+      element.innerHTML = element.innerHTML.replace(/°C/g, "°F");
+      currentUnit = "F";
+    } else {
+      element.innerHTML = element.innerHTML.replace(/°F/g, "°C");
+      currentUnit = "C";
+    }
+  }
+}
+
+
+
+export { getIcon, getDateByTimezone, capitalize, convertDateToWeekDay, toggleTemperatureUnit };

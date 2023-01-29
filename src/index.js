@@ -1,12 +1,12 @@
 import css from './styles.css';
 import * as utils from './utils';
 
-function fetchWeather(location) {
-    return fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&APPID=c623d6c1dc938ebc64fffc73f94df621&units=metric`, {mode: 'cors'}) 
+function fetchWeather(location, units) {
+    return fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&APPID=c623d6c1dc938ebc64fffc73f94df621&units=${units}`, {mode: 'cors'}) 
 }
 
-function fetchForecast(location) {
-    return fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=c623d6c1dc938ebc64fffc73f94df621&units=metric`);
+function fetchForecast(location, units) {
+    return fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=c623d6c1dc938ebc64fffc73f94df621&units=${units}`);
 }
 
 /*function processData(weatherData) {
@@ -24,12 +24,18 @@ async function processData(weatherData) {
     return jsonData;
 }
 
-
-function refresh(query) {
-    const weatherData = fetchWeather(query);
+let unit = "";
+function refresh(query, units) {
+    const weatherData = fetchWeather(query, units);
     const weather = processData(weatherData);
-    const forecastData = fetchForecast(query);
+    const forecastData = fetchForecast(query, units);
     const forecast = processData(forecastData);
+
+    if (units === "imperial") {
+        unit = " °F";
+    } else if (units === "metric") {
+        unit = " °C";
+    }
 
     weather.then(function(data) {
         const title = document.querySelector(".title");
@@ -46,10 +52,10 @@ function refresh(query) {
         title.innerHTML = utils.capitalize(data.weather[0].description);
         location.innerHTML = utils.capitalize(data.name);
         date.innerHTML = utils.getDateByTimezone(data.timezone);
-        temperature.innerHTML = Math.round(data.main.temp* 10) / 10 + " °C";
+        temperature.innerHTML = Math.round(data.main.temp* 10) / 10 + unit;
         currentWeather.innerHTML = utils.getIcon(data.weather[0].icon);
     
-        feelsLike.innerHTML = data.main.feels_like;
+        feelsLike.innerHTML = Math.round(data.main.feels_like * 10) / 10 + unit;
         humidity.innerHTML = data.main.humidity + " %";
         windSpeed.innerHTML = data.wind.speed + " km/h";
     });
@@ -69,8 +75,8 @@ function refresh(query) {
         let icon = null;   
 
         for (let item of data.list) {
-            if (item.dt_txt.split(" ")[1] === "12:00:00") icon = item.weather[0].icon;
-            if (dateString !== item.dt_txt.substring(0, item.dt_txt.indexOf(" "))) {
+            if (dateString !== item.dt_txt.substring(0, item.dt_txt.indexOf(" ")) && item.dt_txt.split(" ")[1] === "12:00:00") {
+                icon = item.weather[0].icon;
                 dateString = item.dt_txt.substring(0, item.dt_txt.indexOf(" "));
                 currentDay = {date: dateString, maxTemp: item.main.temp_max, minTemp: item.main.temp_min, icon: icon};
                 futureDays.push(currentDay);
@@ -96,8 +102,8 @@ function refresh(query) {
         let i = 0;
         for (let weekDay of weekDays) {
             weekDay.querySelector(".weekDayTitle").textContent = utils.convertDateToWeekDay(futureDays[i].date);
-            weekDay.querySelector(".temperatureHigh").textContent = futureDays[i].maxTemp + " °C";
-            weekDay.querySelector(".temperatureLow").textContent = futureDays[i].minTemp + " °C";
+            weekDay.querySelector(".temperatureHigh").textContent =  Math.round(futureDays[i].maxTemp * 10) / 10 + unit;
+            weekDay.querySelector(".temperatureLow").textContent =  Math.round(futureDays[i].minTemp * 10) / 10 + unit;
             weekDay.querySelector(".weatherIcon").innerHTML = utils.getIcon(futureDays[i].icon);
 
             i++;
@@ -105,9 +111,11 @@ function refresh(query) {
     });
 }
 
-refresh("New York");
+refresh("New York", "metric");
 const searchButton = document.querySelector(".searchButton");
 const searchBar = document.querySelector(".searchBar");
+const unitSwitch = document.querySelector(".unitSwitch");
+
 searchButton.addEventListener(("click"), () => {
     refresh(searchBar.value);
     searchBar.value = "";
@@ -119,3 +127,16 @@ window.addEventListener(("keydown"), (event) => {
         searchBar.value = "";
     } 
 });
+
+unitSwitch.addEventListener(("click"), (e) => {
+    const currentLocation = document.querySelector(".location").textContent;
+    if (unitSwitch.textContent === "Display °F") {
+        refresh(currentLocation, "imperial");
+        unitSwitch.textContent = "Display °C";
+    } else {
+        refresh(currentLocation, "metric");
+        unitSwitch.textContent = "Display °F";
+    }
+
+});
+
