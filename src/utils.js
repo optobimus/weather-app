@@ -128,21 +128,30 @@ function convertDateToWeekDay(dateString) {
 }
 
 
-let currentUnit = "C";
-function toggleTemperatureUnit() {
-  let elements = document.querySelectorAll("body *");
-  for (let i = 0; i < elements.length; i++) {
-    let element = elements[i];
-    if (currentUnit === "C") {
-      element.innerHTML = element.innerHTML.replace(/°C/g, "°F");
-      currentUnit = "F";
-    } else {
-      element.innerHTML = element.innerHTML.replace(/°F/g, "°C");
-      currentUnit = "C";
+function fetchFirstImageFromGoogle(location) {
+  const API_KEY = "AIzaSyDQ_Sl9D8Qq73acio8-ynl6JMU-jyPwl2c";
+  const SEARCH_ENGINE_ID = "a7fbf019348ba4e08";
+
+  async function searchImages(location) {
+    let url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${location}&searchType=image`;
+    try {
+      let response = await fetch(url);
+      let data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
     }
   }
+
+  return searchImages(location).then(data => {
+    if(data.items && data.items.length){
+      return data.items[0].link;
+    }
+  });
 }
 
 
 
-export { getIcon, getDateByTimezone, capitalize, convertDateToWeekDay, toggleTemperatureUnit };
+
+
+export { getIcon, getDateByTimezone, capitalize, convertDateToWeekDay, fetchFirstImageFromGoogle };

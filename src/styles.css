@@ -1,8 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
 body {
-    background-image: url("./static/background.png");
-    background-size: cover;
+
     height: 100vh;
     margin: 0;
     display: flex;
@@ -10,6 +9,16 @@ body {
     justify-content: space-between;
     color: white;
     font-family: "Montserrat", sans-serif;
+}
+
+.background {
+    height: 100%;
+    width: 100%;
+    background-image: url("./static/background.png");
+    background-size: cover;
+    filter: blur(2px);
+    position: absolute;
+    z-index: -1;
 }
 
 body img {
@@ -29,7 +38,7 @@ svg {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 30px;
+    padding: 40px;
 }
 
 .overview svg {
@@ -52,6 +61,7 @@ svg {
 .temperatureContainer {
     display: flex;
     gap: 20px;
+    align-items: center;
 }
 
 .temperature {
@@ -62,6 +72,7 @@ svg {
 .search {
     display: flex;
     gap: 8px;
+    align-items: center;
 }
 
 .searchButton {
@@ -108,16 +119,22 @@ input[type="search"] {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 30px;
+    padding: 40px;
 }
 
 .weatherDetails {
     display: flex;
     gap: 15px;
+    align-items: center;
+}
+
+.weatherInfoLabel {
+    font-size: 1.25em;
+    font-weight: 800;
 }
 
 .bottom {
-    padding: 20px;
+    padding: 40px;
 }
 
 .singleData {

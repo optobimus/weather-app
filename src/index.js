@@ -1,7 +1,7 @@
 import css from './styles.css';
 import * as utils from './utils';
 
-function fetchWeather(location, units) {
+function fetchWeather(location, units = currentUnit) {
     return fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&APPID=c623d6c1dc938ebc64fffc73f94df621&units=${units}`, {mode: 'cors'}) 
 }
 
@@ -25,6 +25,7 @@ async function processData(weatherData) {
 }
 
 let unit = "";
+let currentUnit = "metric";
 function refresh(query, units) {
     const weatherData = fetchWeather(query, units);
     const weather = processData(weatherData);
@@ -43,11 +44,13 @@ function refresh(query, units) {
         const date = document.querySelector(".date");
         const temperature = document.querySelector(".temperature");
         const currentWeather = document.querySelector(".currentWeather");
+
+        const wallpaper = document.querySelector(".background");
+
     
         const feelsLike = document.querySelector("#feelsLike");
         const humidity = document.querySelector("#humidity");
         const windSpeed = document.querySelector("#windSpeed");
-        console.log(data);
         
         title.innerHTML = utils.capitalize(data.weather[0].description);
         location.innerHTML = utils.capitalize(data.name);
@@ -58,6 +61,18 @@ function refresh(query, units) {
         feelsLike.innerHTML = Math.round(data.main.feels_like * 10) / 10 + unit;
         humidity.innerHTML = data.main.humidity + " %";
         windSpeed.innerHTML = data.wind.speed + " km/h";
+
+        utils.fetchFirstImageFromGoogle(location.textContent).then(firstImageUrl => {
+            wallpaper.style.backgroundImage = `url(${firstImageUrl})`;
+        });
+
+        /*utils.fetchFirstImageFromGoogle(location).then(data => {
+        if(data.items && data.items.length){
+            const firstImageUrl = data.items[0].link;
+            document.body.style.backgroundImage = `url(${firstImageUrl})`;
+        }
+        });*/
+          
     });
 
     forecast.then(function(data) {
@@ -66,7 +81,6 @@ function refresh(query, units) {
 
         let list = data.list;
         chanceOfRain.innerHTML = data.list[0].pop * 100 + " %";
-        console.log(data);
         let dateString = data.list[0].dt_txt.substring(0, data.list[0].dt_txt.indexOf(" "));
         const futureDays = [];
 
@@ -85,8 +99,6 @@ function refresh(query, units) {
         for (let day of futureDays) {
             for (let item of data.list) {
                 if (item.dt_txt.substring(0, item.dt_txt.indexOf(" ")) === day.date) {
-                    console.log(day.date + ": " + day.maxTemp);
-                    console.log("DayItem: " + item.main.temp_max);
                     if (item.main.temp_max > day.maxTemp) {
                         day.maxTemp = item.main.temp_max;
                     }
@@ -97,7 +109,6 @@ function refresh(query, units) {
                 
             }
         }
-        console.log(futureDays);
 
         let i = 0;
         for (let weekDay of weekDays) {
@@ -117,13 +128,13 @@ const searchBar = document.querySelector(".searchBar");
 const unitSwitch = document.querySelector(".unitSwitch");
 
 searchButton.addEventListener(("click"), () => {
-    refresh(searchBar.value);
+    refresh(searchBar.value, currentUnit);
     searchBar.value = "";
 });
 
 window.addEventListener(("keydown"), (event) => {
     if (event.key === "Enter") {
-        refresh(searchBar.value);
+        refresh(searchBar.value, currentUnit);
         searchBar.value = "";
     } 
 });
@@ -131,12 +142,13 @@ window.addEventListener(("keydown"), (event) => {
 unitSwitch.addEventListener(("click"), (e) => {
     const currentLocation = document.querySelector(".location").textContent;
     if (unitSwitch.textContent === "Display °F") {
-        refresh(currentLocation, "imperial");
+        currentUnit = "imperial";
         unitSwitch.textContent = "Display °C";
     } else {
-        refresh(currentLocation, "metric");
+        currentUnit = "metric";
         unitSwitch.textContent = "Display °F";
     }
+    refresh(currentLocation, currentUnit);
 
 });
 
