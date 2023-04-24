@@ -129,8 +129,11 @@ function convertDateToWeekDay(dateString) {
 
 
 function fetchFirstImageFromGoogle(location) {
-  const API_KEY = "AIzaSyDQ_Sl9D8Qq73acio8-ynl6JMU-jyPwl2c";
-  const SEARCH_ENGINE_ID = "a7fbf019348ba4e08";
+  // const API_KEY = "AIzaSyDQ_Sl9D8Qq73acio8-ynl6JMU-jyPwl2c";
+  // const SEARCH_ENGINE_ID = "a7fbf019348ba4e08";
+
+  const API_KEY = config.API_KEY;
+  const SEARCH_ENGINE_ID = config.SEARCH_ENGINE_ID;
 
   async function searchImages(location) {
     let url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${location}&searchType=image&imgSize=huge`;
