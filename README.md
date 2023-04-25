@@ -6,15 +6,15 @@
 
 A weather forecast site using the API from OpenWeatherMap.
 
+## Demo
+
+🖥️ <a href="https://optobimus.github.io/weather-app/">Live Demo</a>
+
 ## Showcase
 
 The user can use the input field to search for a city / location. The website will use the OpenWeatherMap API to retrieve the information about the location, and the website will present it in different ways. The user can toggle the temperature units and switch between hourly and daily forecasts.
 
 ![Screencast from 25-04-2023 16_00_39](https://user-images.githubusercontent.com/113835194/234301524-ce38b12e-5f99-4b07-93e0-c45b71ee48d9.gif)
-
-## Demo
-
-🖥️ <a href="https://optobimus.github.io/weather-app/">Live Demo</a>
 
 ## Motivation
 
